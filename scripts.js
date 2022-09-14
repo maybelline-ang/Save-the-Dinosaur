@@ -4,8 +4,6 @@ const context = canvas.getContext("2d");
 canvas.width = 800;
 canvas.height = 500;
 let gameOver = false;
-//***** */ let gameFrame = 0;
-//***** */ context.font = "50px Georgia";
 
 const asteroids = [];
 const dinosaur = [];
@@ -38,8 +36,8 @@ class enemy {
     this.width = width;
     this.height = height;
     this.color = "blue";
-    this.yVelocity = 6;
-    //link to sprite** this.image = document.getElementById();
+    this.yVelocity = 3;
+    // this.image = document.getElementById("asteroidImage");
   }
 
   draw() {
@@ -47,7 +45,7 @@ class enemy {
     context.rect(this.x, this.y, this.width, 30);
     context.fillStyle = this.color;
     context.fill();
-    //** context.drawImage(this.image, 0,0)
+    // context.drawImage(this.image, 0, 0);
   }
 
   update() {
@@ -84,7 +82,7 @@ class player {
   }
 }
 
-dinosaur.push(new player(canvas.width / 2, canvas.height - 50, 30, 100));
+dinosaur.push(new player(canvas.width / 2, canvas.height - 100, 75, 100));
 
 // keyboard interactivity
 document.addEventListener("keydown", (event) => {
@@ -102,27 +100,15 @@ document.addEventListener("keyup", () => {
   right = false;
 });
 
-// push and remove asteroids
-
-//todo:
-
-//clear out asteroid that hit the ground
-//game is over if collision = true
-// check all present asteroids for collision --> may need to convert into function to keep calling
-//increase number of asteroids through increasing asteroid.push
-
+// asteroid creation
 const asteroidCreation = () => {
   const x = Math.random() * canvas.width;
-  asteroids.push(new enemy(x, -10, 30));
+  asteroids.push(new enemy(x, -20, 30, 30));
 };
 
-setInterval(asteroidCreation, 2500);
+setInterval(asteroidCreation, 500);
 
-//**STUCK HERE *//
-// asteroid will come down. then check each asteroids x/y etc
-// once asteroid hits ground, remove it
-// repeat step 1
-
+//asteroid removal
 const asteroidRemoval = () => {
   for (let i = 0; i < asteroids.length; i++) {
     if (asteroids[i].y > 500) {
@@ -135,12 +121,13 @@ const asteroidRemoval = () => {
 const checkCollision = () => {
   if (asteroids.length) {
     if (
-      asteroids[0].x < dinosaur[0].x + dinosaur[0].width &&
-      asteroids[0].x + asteroids[0].width > dinosaur[0].x &&
-      asteroids[0].y < dinosaur[0].y + dinosaur[0].width &&
-      asteroids[0].y + asteroids[0].width > dinosaur[0].y
+      asteroids[0].x > dinosaur[0].x + dinosaur[0].width ||
+      asteroids[0].x + asteroids[0].width < dinosaur[0].x ||
+      asteroids[0].height + asteroids[0].y < dinosaur[0].y
     ) {
-      console.log("true");
+    } else {
+      // console.log("hit");
+      alert("Game Over. Dinosaur Extinct");
     }
   }
 };
@@ -148,7 +135,6 @@ const checkCollision = () => {
 setInterval(() => {
   asteroidRemoval();
   checkCollision();
-  console.log(asteroids);
 }, 100);
 
 //animation loop
@@ -166,5 +152,4 @@ const animate = () => {
 
   requestAnimationFrame(animate);
 };
-
 animate();
