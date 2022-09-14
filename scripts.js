@@ -3,7 +3,6 @@ const canvas = document.getElementById("canvas1");
 const context = canvas.getContext("2d");
 canvas.width = 800;
 canvas.height = 500;
-let gameOver = false;
 
 const asteroids = [];
 const dinosaur = [];
@@ -35,17 +34,14 @@ class enemy {
     this.y = y;
     this.width = width;
     this.height = height;
-    this.color = "blue";
     this.yVelocity = 3;
-    // this.image = document.getElementById("asteroidImage");
+    this.image = document.getElementById("asteroidImage");
   }
 
   draw() {
     context.beginPath();
-    context.rect(this.x, this.y, this.width, 30);
-    context.fillStyle = this.color;
-    context.fill();
-    // context.drawImage(this.image, 0, 0);
+    context.rect(this.x, this.y, this.width, 50);
+    context.drawImage(this.image, this.x, this.y, 40, 80);
   }
 
   update() {
@@ -62,11 +58,11 @@ class player {
     this.width = width;
     this.height = height;
     this.speed = 5;
+    this.image = document.getElementById("dinosaurImage");
   }
 
   draw() {
-    context.fillStyle = "red";
-    context.fillRect(this.x, this.y, this.width, this.height);
+    context.drawImage(this.image, this.x, this.y, 120, 120);
   }
 
   update() {
@@ -82,7 +78,7 @@ class player {
   }
 }
 
-dinosaur.push(new player(canvas.width / 2, canvas.height - 100, 75, 100));
+dinosaur.push(new player(canvas.width / 2, canvas.height - 100, 80, 120));
 
 // keyboard interactivity
 document.addEventListener("keydown", (event) => {
@@ -106,7 +102,7 @@ const asteroidCreation = () => {
   asteroids.push(new enemy(x, -20, 30, 30));
 };
 
-setInterval(asteroidCreation, 500);
+setInterval(asteroidCreation, 800);
 
 //asteroid removal
 const asteroidRemoval = () => {
@@ -126,8 +122,8 @@ const checkCollision = () => {
       asteroids[0].height + asteroids[0].y < dinosaur[0].y
     ) {
     } else {
-      // console.log("hit");
-      alert("Game Over. Dinosaur Extinct");
+      console.log("hit");
+      // alert("Game Over. Dinosaur Extinct");
     }
   }
 };
