@@ -5,6 +5,7 @@ canvas.width = 800;
 canvas.height = 500;
 
 const asteroids = [];
+const largeAsteroids = [];
 const dinosaur = [];
 let left;
 let right;
@@ -34,8 +35,30 @@ class enemy {
     this.y = y;
     this.width = width;
     this.height = height;
-    this.yVelocity = 3;
+    this.yVelocity = 5;
     this.image = document.getElementById("asteroidImage");
+  }
+
+  draw() {
+    context.beginPath();
+    context.rect(this.x, this.y, this.width, 50);
+    context.drawImage(this.image, this.x, this.y, 40, 80);
+  }
+
+  update() {
+    this.draw();
+    this.y += this.yVelocity;
+  }
+}
+
+class newEnemy {
+  constructor(x, y, width, height) {
+    this.x = x;
+    this.y = y;
+    this.width = width;
+    this.height = height;
+    this.yVelocity = Math.floor(Math.random() * 8) + 5;
+    this.image = document.getElementById("largeAsteroidImage");
   }
 
   draw() {
@@ -131,7 +154,45 @@ const checkCollision = () => {
 setInterval(() => {
   asteroidRemoval();
   checkCollision();
-}, 100);
+}, 500);
+
+// large asteroid
+
+const createLargeAsteroid = () => {
+  const x = Math.random() * canvas.width;
+  largeAsteroids.push(new newEnemy(x, -20, 30, 30));
+};
+
+setInterval(createLargeAsteroid, 5500);
+
+//large asteroid removal
+const largeAsteroidRemoval = () => {
+  for (let i = 0; i < largeAsteroids.length; i++) {
+    if (largeAsteroids[i].y > 500) {
+      largeAsteroids.splice(0, 1);
+    }
+  }
+};
+
+// collision detection
+const checkLargeAsteroidCollision = () => {
+  if (largeAsteroids.length) {
+    if (
+      largeAsteroids[0].x > dinosaur[0].x + dinosaur[0].width ||
+      largeAsteroids[0].x + largeAsteroids[0].width < dinosaur[0].x ||
+      largeAsteroids[0].height + largeAsteroids[0].y < dinosaur[0].y
+    ) {
+    } else {
+      console.log("hit");
+      // alert("Game Over. Dinosaur Extinct");
+    }
+  }
+};
+
+setInterval(() => {
+  largeAsteroidRemoval();
+  checkLargeAsteroidCollision();
+}, 300);
 
 //animation loop
 const animate = () => {
@@ -139,6 +200,10 @@ const animate = () => {
   backgroundImage.draw(context);
 
   asteroids.forEach((asteroid) => {
+    asteroid.update();
+  });
+
+  largeAsteroids.forEach((asteroid) => {
     asteroid.update();
   });
 

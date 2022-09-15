@@ -21,10 +21,14 @@ body {
   display: none;
 }
 
+#dinosaurImage {
+  display: none;
+}
+
 #asteroidImage {
   display: none;
 }
 
-#dinosaurImage {
+#largeAsteroidImage {
   display: none;
 }
